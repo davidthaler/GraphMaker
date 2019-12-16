@@ -1,6 +1,13 @@
 /*
 A first-cut at a graph maker for representing graphs in the browser.
 This one will keep the data in the svg elements.
+
+This one has a few problems:
+1) The edges are on top of the nodes. 
+   This is not visible if they are the same color, but causes odd UI behavior.
+2) Double edges are possible, but not visible.
+3) Overlapping nodes are possible. They may be visible.
+4) There is repeated code in the button-state toggle.
 */
 window.onload = main;
 
@@ -32,6 +39,26 @@ function main(){
         }
     });
 
+    d3.select('#addEdge').on('click', function(){
+        d3.selectAll('button').style('background-color', null);
+        if((state == 'pickS') || (state == 'pickT') ){
+            state = undefined
+        }else{
+            state = 'pickS';
+            d3.select(this).style('background-color', 'lightgrey');
+        }
+    });
+
+    d3.select('#removeEdge').on('click', function(){
+        d3.selectAll('button').style('background-color', null);
+        if(state == 'removeEdge'){
+            state = undefined;
+        }else{
+            state = 'removeEdge';
+            d3.select(this).style('background-color', 'lightgrey');
+        }
+    });
+
     function clickNode(){
         if(state == 'removeNode'){
             let n = d3.select(this);
@@ -49,22 +76,20 @@ function main(){
                .attr('stroke', 'darkgray').attr('stroke-width', '2')
                .attr('x1', s.attr('cx')).attr('y1', s.attr('cy'))
                .attr('x2', t.attr('cx')).attr('y2', t.attr('cy'))
-               .attr('sid', s.attr('id')).attr('tid', t.attr('id'));
+               .attr('sid', s.attr('id')).attr('tid', t.attr('id'))
+               .on('click', clickEdge);
             s = undefined;
             t = undefined;
         }
         d3.event.stopPropagation();
     }
 
-    d3.select('#addEdge').on('click', function(){
-        d3.selectAll('button').style('background-color', null);
-        if((state == 'pickS') || (state == 'pickT') ){
-            state = undefined
-        }else{
-            state = 'pickS';
-            d3.select(this).style('background-color', 'lightgrey');
+    function clickEdge(){
+        if(state == 'removeEdge'){
+            d3.select(this).remove();
         }
-    });
+        d3.event.stopPropagation();
+    }
 
     svg.on('click', function(){
         [x, y] = d3.mouse(this);
