@@ -4,7 +4,8 @@ This one will keep the data in the svg elements.
 
 This one has a few problems:
 1) The edges are on top of the nodes. 
-   This is not visible if they are the same color, but causes odd UI behavior.
+   This is not visible if they are the same color, but causes odd UI behavior,
+   especially at nodes with a high degree. They are hard to select.
 2) Double edges are possible, but not visible.
 3) Overlapping nodes are possible. They may be visible.
 4) There is repeated code in the button-state toggle.
