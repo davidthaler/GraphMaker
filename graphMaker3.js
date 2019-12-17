@@ -33,11 +33,16 @@ function translate(d){
     return `translate(${d.x},${d.y})`;
 }
 
+// As of now, makeNodes works once, but does not update due to lack of GUP
 function makeNodes(nodes){
-    d3.select('svg').selectAll('g').data(nodes).enter()
-      .append('g').attr('transform', translate).call(node);
+    let nodeSel = d3.select('svg').selectAll('g').data(nodes, d => d.id);
+    nodeSel.exit().remove();
+    let newNodes = nodeSel.enter()
+                          .append('g')
+                          .call(node);
+    nodeSel = newNodes.merge(nodeSel);
+    nodeSel.attr('transform', translate);
 }
-
 
 function main(){
     makeNodes(ns);
