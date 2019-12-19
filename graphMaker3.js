@@ -5,12 +5,20 @@ window.onload = main;
 
 // ID generator
 getID = function(){let i=0;return function(){return i++}}();
+getName = function(){
+        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        let i=0;
+        return (function(){
+            i %= 26;
+            return letters[i++];
+        });
+    }();    //evaluated
 
 // for now...
-const ns = [{'name':'A', id:getID(), x:200, y:200},
-            {'name':'B', id:getID(), x:400, y:200},
-            {'name':'C', id:getID(), x:400, y:400},
-            {'name':'D', id:getID(), x:200, y:400}];
+const ns = [{name:getName(), id:getID(), x:200, y:200},
+            {name:getName(), id:getID(), x:400, y:200},
+            {name:getName(), id:getID(), x:400, y:400},
+            {name:getName(), id:getID(), x:200, y:400}];
 
 const es = [{id:getID(), s:ns[0], t:ns[1]},
             {id:getID(), s:ns[3], t:ns[0]},
@@ -89,4 +97,11 @@ function main(){
     d3.select('#addNode').on('click', buttonClick('addNode'));
     d3.select('#removeNode').on('click', buttonClick('removeNode'));
     drawGraph(ns, es);
+    d3.select('svg').on('click', function(){
+        [x, y] = d3.mouse(this);
+        if(state == 'addNode'){
+            ns.push({name:getName(), id:getID(), x, y});
+            drawGraph();
+        }
+    });
 }
