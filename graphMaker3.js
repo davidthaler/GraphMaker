@@ -1,20 +1,20 @@
 /*
-Third take on graphMaker. This one uses a component to try to get around the 
-text-circle issue and hopefully simplify the code.
-
-
+Third take on graphMaker. 
 */
 window.onload = main;
 
-// for now...
-const ns = [{'name':'A', id:0, x:200, y:200},
-            {'name':'B', id:1, x:400, y:200},
-            {'name':'C', id:2, x:400, y:400},
-            {'name':'D', id:3, x:200, y:400}];
+// ID generator
+getID = function(){let i=0;return function(){return i++}}();
 
-const es = [{id:4, s:ns[0], t:ns[1]},
-            {id:5, s:ns[3], t:ns[0]},
-            {id:6, s:ns[0], t:ns[2]}];
+// for now...
+const ns = [{'name':'A', id:getID(), x:200, y:200},
+            {'name':'B', id:getID(), x:400, y:200},
+            {'name':'C', id:getID(), x:400, y:400},
+            {'name':'D', id:getID(), x:200, y:400}];
+
+const es = [{id:getID(), s:ns[0], t:ns[1]},
+            {id:getID(), s:ns[3], t:ns[0]},
+            {id:getID(), s:ns[0], t:ns[2]}];
 
 const RADIUS = 10;
 const FONTSIZE = 10;
@@ -43,14 +43,19 @@ function makeNodes(nodes){
     nodeSel.exit().remove();
     let newNodes = nodeSel.enter().append('g').call(node);
     nodeSel = newNodes.merge(nodeSel);
-    nodeSel.attr('transform', translate);
+    /*
+    NB: raise() removes all of the nodes in a selection and then appends
+    them to their parent, putting them at the end of the child nodes. 
+    This is what keeps the nodes on top of the edges.
+    */
+    nodeSel.attr('transform', translate).raise();
 }
 
 function makeEdges(edges){
     let edgeSel = d3.select('svg').selectAll('line.edge').data(edges, d => d.id)
     edgeSel.exit().remove();
     let newEdges = edgeSel.enter().append('line')
-                          .attr('stroke', 'darkgray').attr('stroke-width', 2)
+                          .attr('stroke', 'lightgray').attr('stroke-width', 2)
                           .classed('edge', true);
     edgeSel = newEdges.merge(edgeSel);
     edgeSel.attr('x1', d => d.s.x).attr('y1', d => d.s.y)
