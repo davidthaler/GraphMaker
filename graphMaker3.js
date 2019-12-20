@@ -3,7 +3,7 @@ Third take on graphMaker.
 */
 window.onload = main;
 
-// ID generator
+// Name and ID generators
 getID = function(){let i=0;return function(){return i++}}();
 getName = function(){
         const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -15,12 +15,12 @@ getName = function(){
     }();    //evaluated
 
 // for now...
-const ns = [{name:getName(), id:getID(), x:200, y:200},
+let ns = [{name:getName(), id:getID(), x:200, y:200},
             {name:getName(), id:getID(), x:400, y:200},
             {name:getName(), id:getID(), x:400, y:400},
             {name:getName(), id:getID(), x:200, y:400}];
 
-const es = [{id:getID(), s:ns[0], t:ns[1]},
+let es = [{id:getID(), s:ns[0], t:ns[1]},
             {id:getID(), s:ns[3], t:ns[0]},
             {id:getID(), s:ns[0], t:ns[2]}];
 
@@ -59,12 +59,23 @@ function makeNodes(nodes){
     nodeSel.attr('transform', translate).raise();
 }
 
+function clickEdge(){
+    if(state=='removeEdge'){
+        // could use d3.select(this).attr('edgeId')
+        let id = this.getAttribute('edgeId');
+        es = es.filter(x => (x.id != id));
+        drawGraph();
+    }
+}
+
 function makeEdges(edges){
     let edgeSel = d3.select('svg').selectAll('line.edge').data(edges, d => d.id)
     edgeSel.exit().remove();
     let newEdges = edgeSel.enter().append('line')
                           .attr('stroke', 'lightgray').attr('stroke-width', 2)
-                          .classed('edge', true);
+                          .attr('edgeId', d => d.id)
+                          .classed('edge', true)
+                          .on('click', clickEdge);
     edgeSel = newEdges.merge(edgeSel);
     edgeSel.attr('x1', d => d.s.x).attr('y1', d => d.s.y)
            .attr('x2', d => d.t.x).attr('y2', d => d.t.y)
@@ -96,6 +107,8 @@ function drawGraph(nodes, edges){
 function main(){
     d3.select('#addNode').on('click', buttonClick('addNode'));
     d3.select('#removeNode').on('click', buttonClick('removeNode'));
+    d3.select('#addEdge').on('click', buttonClick(['pickS', 'pickT']));
+    d3.select('#removeEdge').on('click', buttonClick('removeEdge'));
     drawGraph(ns, es);
     d3.select('svg').on('click', function(){
         [x, y] = d3.mouse(this);
