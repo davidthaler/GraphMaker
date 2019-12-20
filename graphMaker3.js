@@ -24,6 +24,7 @@ let es = [{id:getID(), s:ns[0], t:ns[1]},
             {id:getID(), s:ns[3], t:ns[0]},
             {id:getID(), s:ns[0], t:ns[2]}];
 
+let s, t;
 const RADIUS = 10;
 const FONTSIZE = 10;
 const OFFSET = 3;
@@ -47,12 +48,23 @@ function translate(d){
 }
 
 function clickNode(){
+    let nodeId = this.getAttribute('nodeId');
     if(state == 'removeNode'){
-        let nodeId = this.getAttribute('nodeId');
         es = es.filter(edge => ((edge.s.id != nodeId) 
                                 && (edge.t.id != nodeId)));
         ns = ns.filter(node => (node.id != nodeId));
         drawGraph();
+    }else if(state == 'pickS'){
+        s = ns.filter(node => (node.id == nodeId))[0];
+        state = 'pickT';
+    }else if(state =='pickT'){
+        t = ns.filter(node => (node.id == nodeId))[0];
+        // create s-t edge
+        es.push({id:getID(), s, t});
+        state = 'pickS';
+        drawGraph();
+        s = undefined;
+        t = undefined;
     }
 }
 
