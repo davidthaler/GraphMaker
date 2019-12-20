@@ -14,15 +14,6 @@ getName = function(){
         });
     }();    //evaluated
 
-// for now...
-// let ns = [{name:getName(), id:getID(), x:200, y:200},
-//             {name:getName(), id:getID(), x:400, y:200},
-//             {name:getName(), id:getID(), x:400, y:400},
-//             {name:getName(), id:getID(), x:200, y:400}];
-
-// let es = [{id:getID(), s:ns[0], t:ns[1]},
-//             {id:getID(), s:ns[3], t:ns[0]},
-//             {id:getID(), s:ns[0], t:ns[2]}];
 let ns = [];
 let es = [];
 let s, t;
