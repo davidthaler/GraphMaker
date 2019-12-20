@@ -46,10 +46,24 @@ function translate(d){
     return `translate(${d.x},${d.y})`;
 }
 
+function clickNode(){
+    if(state == 'removeNode'){
+        let nodeId = this.getAttribute('nodeId');
+        es = es.filter(edge => ((edge.s.id != nodeId) 
+                                && (edge.t.id != nodeId)));
+        ns = ns.filter(node => (node.id != nodeId));
+        drawGraph();
+    }
+}
+
 function makeNodes(nodes){
     let nodeSel = d3.select('svg').selectAll('g').data(nodes, d => d.id);
     nodeSel.exit().remove();
-    let newNodes = nodeSel.enter().append('g').call(node);
+    let newNodes = nodeSel.enter()
+                          .append('g')
+                          .call(node)
+                          .attr('nodeId', d => d.id)
+                          .on('click', clickNode);
     nodeSel = newNodes.merge(nodeSel);
     /*
     NB: raise() removes all of the nodes in a selection and then appends
@@ -62,8 +76,8 @@ function makeNodes(nodes){
 function clickEdge(){
     if(state=='removeEdge'){
         // could use d3.select(this).attr('edgeId')
-        let id = this.getAttribute('edgeId');
-        es = es.filter(x => (x.id != id));
+        let edgeId = this.getAttribute('edgeId');
+        es = es.filter(x => (x.id != edgeId));
         drawGraph();
     }
 }
