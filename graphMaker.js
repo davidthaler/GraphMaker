@@ -78,11 +78,6 @@ function makeNodes(nodes){
                           .attr('nodeId', d => d.id)
                           .on('click', clickNode);
     nodeSel = newNodes.merge(nodeSel);
-    /*
-    NB: raise() removes all of the nodes in a selection and then appends
-    them to their parent, putting them at the end of the child nodes. 
-    This is what keeps the nodes on top of the edges.
-    */
     nodeSel.attr('transform', translate).raise();
 }
 
@@ -110,11 +105,6 @@ function makeEdges(edges){
            .attr('x2', d => d.t.x).attr('y2', d => d.t.y)
 }
 
-/*
-Closure to get a button click callback. 
-Expects state to be a global.
-Requires a "state-active" CSS class in the HTML.
-*/
 function buttonClick(states){
     states = (states instanceof Array) ? states : [states];
     return function(){
