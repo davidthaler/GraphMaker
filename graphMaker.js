@@ -14,8 +14,8 @@ getName = function(){
         });
     }();    //evaluated
 
-let ns = [];
-let es = [];
+let nodeMap = new Map();
+let edgeMap = new Map();
 let s, t;
 const RADIUS = 10;
 const FONTSIZE = 10;
@@ -40,23 +40,32 @@ function translate(d){
 }
 
 function clickNode(){
-    let nodeId = this.getAttribute('nodeId');
+    let nodeId = Number(this.getAttribute('nodeId'));
     if(state == 'removeNode'){
-        es = es.filter(edge => ((edge.s.id != nodeId) 
-                                && (edge.t.id != nodeId)));
-        ns = ns.filter(node => (node.id != nodeId));
+        let node = nodeMap.get(nodeId);
+        for(edgeId of node.edges){
+            let edge = edgeMap.get(edgeId);
+            let other = (edge.s === node ? edge.t:edge.s);
+            other.edges = other.edges.filter(x => x != edgeId);
+            edgeMap.delete(edgeId);
+        }
+        nodeMap.delete(nodeId)
         drawGraph();
     }else if(state == 'pickS'){
-        s = ns.filter(node => (node.id == nodeId))[0];
+        s = nodeMap.get(nodeId);
         state = 'pickT';
     }else if(state =='pickT'){
-        t = ns.filter(node => (node.id == nodeId))[0];
+        t = nodeMap.get(nodeId);
         // create s-t edge
-        es.push({id:getID(), s, t});
+        let newId = getID();
+        edgeMap.set(newId, {id:newId, s, t});
+        s.edges.push(newId);
+        t.edges.push(newId);
+        // reset state
         state = 'pickS';
-        drawGraph();
         s = undefined;
         t = undefined;
+        drawGraph();
     }
 }
 
@@ -79,9 +88,11 @@ function makeNodes(nodes){
 
 function clickEdge(){
     if(state=='removeEdge'){
-        // could use d3.select(this).attr('edgeId')
-        let edgeId = this.getAttribute('edgeId');
-        es = es.filter(x => (x.id != edgeId));
+        let edgeId = Number(this.getAttribute('edgeId'));
+        let edge = edgeMap.get(edgeId);
+        edge.s.edges = edge.s.edges.filter(x => x != edgeId)
+        edge.t.edges = edge.t.edges.filter(x => x != edgeId)
+        edgeMap.delete(edgeId);
         drawGraph();
     }
 }
@@ -117,9 +128,10 @@ function buttonClick(states){
     }
 }
 
-function drawGraph(nodes, edges){
-    makeEdges(es);
-    makeNodes(ns);
+
+function drawGraph(){
+    makeEdges([...edgeMap.values()]);
+    makeNodes([...nodeMap.values()]);
 }
 
 function main(){
@@ -127,11 +139,12 @@ function main(){
     d3.select('#removeNode').on('click', buttonClick('removeNode'));
     d3.select('#addEdge').on('click', buttonClick(['pickS', 'pickT']));
     d3.select('#removeEdge').on('click', buttonClick('removeEdge'));
-    drawGraph(ns, es);
+    drawGraph();
     d3.select('svg').on('click', function(){
         [x, y] = d3.mouse(this);
         if(state == 'addNode'){
-            ns.push({name:getName(), id:getID(), x, y});
+            let newId = getID();
+            nodeMap.set(newId, {name:getName(), id:newId, x, y, edges:[]});
             drawGraph();
         }
     });
