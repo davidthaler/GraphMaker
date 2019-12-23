@@ -20,7 +20,7 @@ let s, t;
 const RADIUS = 10;
 const FONTSIZE = 10;
 const OFFSET = 3;
-let state = undefined;
+let state = 'none';
 
 function node(sel){
     sel.append('circle').attr('r', RADIUS)
@@ -63,8 +63,8 @@ function clickNode(){
         t.edges.push(newId);
         // reset state
         state = 'pickS';
-        s = undefined;
-        t = undefined;
+        s = 'none';
+        t = 'none';
         drawGraph();
     }
 }
@@ -76,7 +76,17 @@ function makeNodes(nodes){
                           .append('g')
                           .call(node)
                           .attr('nodeId', d => d.id)
-                          .on('click', clickNode);
+                          .on('click', clickNode)
+                          .call(d3.drag().on('drag', function(){
+                            if(state == 'none'){
+                                let nodeId = Number(this.getAttribute('nodeId'));
+                                let node = nodeMap.get(nodeId);
+                                let [x, y] = d3.mouse(this);
+                                node.x += x;
+                                node.y += y;
+                                drawGraph();
+                            }
+                          }));
     nodeSel = newNodes.merge(nodeSel);
     nodeSel.attr('transform', translate).raise();
 }
@@ -110,7 +120,7 @@ function buttonClick(states){
     return function(){
         d3.selectAll('button').classed('state-active', false);
         if(states.includes(state)){
-            state = undefined;
+            state = 'none';
         }else{
             state = states[0];
             d3.select(this).classed('state-active', true);
@@ -131,7 +141,7 @@ function main(){
     d3.select('#removeEdge').on('click', buttonClick('removeEdge'));
     drawGraph();
     d3.select('svg').on('click', function(){
-        [x, y] = d3.mouse(this);
+        let [x, y] = d3.mouse(this);
         if(state == 'addNode'){
             let newId = getID();
             nodeMap.set(newId, {name:getName(), id:newId, x, y, edges:[]});
