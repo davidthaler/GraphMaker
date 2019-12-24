@@ -85,6 +85,20 @@ function clickEdge(){
     }
 }
 
+// Closure that returns button click handlers
+function buttonClick(states){
+    states = (states instanceof Array) ? states : [states];
+    return function(){
+        d3.selectAll('button').classed('state-active', false);
+        if(states.includes(state)){
+            state = 'none';
+        }else{
+            state = states[0];
+            d3.select(this).classed('state-active', true);
+        }
+    }
+}
+
 // D3 graphics
 function node(sel){
     sel.append('circle').attr('r', RADIUS)
@@ -103,7 +117,7 @@ function translate(d){
     return `translate(${d.x},${d.y})`;
 }
 
-function makeNodes(nodes){
+function drawNodes(nodes){
     let nodeSel = d3.select('svg').selectAll('g').data(nodes, d => d.id);
     nodeSel.exit().remove();
     let newNodes = nodeSel.enter()
@@ -122,7 +136,7 @@ function makeNodes(nodes){
     nodeSel.attr('transform', translate).raise();
 }
 
-function makeEdges(edges){
+function drawEdges(edges){
     let edgeSel = d3.select('svg').selectAll('line.edge').data(edges, d => d.id)
     edgeSel.exit().remove();
     let newEdges = edgeSel.enter().append('line')
@@ -135,24 +149,12 @@ function makeEdges(edges){
            .attr('x2', d => d.t.x).attr('y2', d => d.t.y)
 }
 
-function buttonClick(states){
-    states = (states instanceof Array) ? states : [states];
-    return function(){
-        d3.selectAll('button').classed('state-active', false);
-        if(states.includes(state)){
-            state = 'none';
-        }else{
-            state = states[0];
-            d3.select(this).classed('state-active', true);
-        }
-    }
-}
-
 function drawGraph(){
-    makeEdges([...edgeMap.values()]);
-    makeNodes([...nodeMap.values()]);
+    drawEdges([...edgeMap.values()]);
+    drawNodes([...nodeMap.values()]);
 }
 
+// Set up graphMaker
 function main(){
     d3.select('#addNode').on('click', buttonClick('addNode'));
     d3.select('#removeNode').on('click', buttonClick('removeNode'));
