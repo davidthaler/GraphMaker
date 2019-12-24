@@ -23,9 +23,8 @@ const FONTSIZE = 10;
 const OFFSET = 3;
 let state = 'none';
 
-function addNode(x, y, name){
+function addNode(x, y, name=getName()){
     let newId = getID();
-    name = (name == undefined) ? getName() : name;
     nodeMap.set(newId, {name, id:newId, x, y, edges:[]});
 }
 
@@ -47,12 +46,7 @@ function removeEdge(edgeId){
 function removeNode(nodeId){
     nodeId = Number(nodeId);
     let node = nodeMap.get(nodeId);
-    for(edgeId of node.edges){
-        let edge = edgeMap.get(edgeId);
-        let other = (edge.s === node ? edge.t:edge.s);
-        other.edges = other.edges.filter(x => x != edgeId);
-        edgeMap.delete(edgeId);
-    }
+    node.edges.forEach(removeEdge);
     nodeMap.delete(nodeId)
 }
 
