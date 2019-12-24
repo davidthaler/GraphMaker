@@ -14,6 +14,7 @@ getName = function(){
         });
     }();    //evaluated
 
+
 let nodeMap = new Map();
 let edgeMap = new Map();
 let s, t;
@@ -21,6 +22,46 @@ const RADIUS = 10;
 const FONTSIZE = 10;
 const OFFSET = 3;
 let state = 'none';
+
+function addNode(x, y, name){
+    let newId = getID();
+    name = (name == undefined) ? getName() : name;
+    nodeMap.set(newId, {name, id:newId, x, y, edges:[]});
+}
+
+function addEdge(s, t){
+    let newId = getID();
+    edgeMap.set(newId, {id:newId, s, t});
+    s.edges.push(newId);
+    t.edges.push(newId);
+}
+
+function removeEdge(edgeId){
+    edgeId = Number(edgeId);
+    let edge = edgeMap.get(edgeId);
+    edge.s.edges = edge.s.edges.filter(x => x != edgeId)
+    edge.t.edges = edge.t.edges.filter(x => x != edgeId)
+    edgeMap.delete(edgeId);
+}
+
+function removeNode(nodeId){
+    nodeId = Number(nodeId);
+    let node = nodeMap.get(nodeId);
+    for(edgeId of node.edges){
+        let edge = edgeMap.get(edgeId);
+        let other = (edge.s === node ? edge.t:edge.s);
+        other.edges = other.edges.filter(x => x != edgeId);
+        edgeMap.delete(edgeId);
+    }
+    nodeMap.delete(nodeId)
+}
+
+function moveNode(nodeId, dx, dy){
+    nodeId = Number(nodeId);
+    let node = nodeMap.get(nodeId);
+    node.x += dx;
+    node.y += dy;
+}
 
 function node(sel){
     sel.append('circle').attr('r', RADIUS)
@@ -42,14 +83,7 @@ function translate(d){
 function clickNode(){
     let nodeId = Number(this.getAttribute('nodeId'));
     if(state == 'removeNode'){
-        let node = nodeMap.get(nodeId);
-        for(edgeId of node.edges){
-            let edge = edgeMap.get(edgeId);
-            let other = (edge.s === node ? edge.t:edge.s);
-            other.edges = other.edges.filter(x => x != edgeId);
-            edgeMap.delete(edgeId);
-        }
-        nodeMap.delete(nodeId)
+        removeNode(nodeId);
         drawGraph();
     }else if(state == 'pickS'){
         s = nodeMap.get(nodeId);
@@ -57,14 +91,11 @@ function clickNode(){
     }else if(state =='pickT'){
         t = nodeMap.get(nodeId);
         // create s-t edge
-        let newId = getID();
-        edgeMap.set(newId, {id:newId, s, t});
-        s.edges.push(newId);
-        t.edges.push(newId);
+        addEdge(s, t);
         // reset state
         state = 'pickS';
-        s = 'none';
-        t = 'none';
+        s = undefined;
+        t = undefined;
         drawGraph();
     }
 }
@@ -79,11 +110,8 @@ function makeNodes(nodes){
                           .on('click', clickNode)
                           .call(d3.drag().on('drag', function(){
                             if(state == 'none'){
-                                let nodeId = Number(this.getAttribute('nodeId'));
-                                let node = nodeMap.get(nodeId);
-                                let [x, y] = d3.mouse(this);
-                                node.x += x;
-                                node.y += y;
+                                let [dx, dy] = d3.mouse(this);
+                                moveNode(this.getAttribute('nodeId'), dx, dy);
                                 drawGraph();
                             }
                           }));
@@ -93,11 +121,7 @@ function makeNodes(nodes){
 
 function clickEdge(){
     if(state=='removeEdge'){
-        let edgeId = Number(this.getAttribute('edgeId'));
-        let edge = edgeMap.get(edgeId);
-        edge.s.edges = edge.s.edges.filter(x => x != edgeId)
-        edge.t.edges = edge.t.edges.filter(x => x != edgeId)
-        edgeMap.delete(edgeId);
+        removeEdge(this.getAttribute('edgeId'));
         drawGraph();
     }
 }
@@ -128,7 +152,6 @@ function buttonClick(states){
     }
 }
 
-
 function drawGraph(){
     makeEdges([...edgeMap.values()]);
     makeNodes([...nodeMap.values()]);
@@ -143,8 +166,7 @@ function main(){
     d3.select('svg').on('click', function(){
         let [x, y] = d3.mouse(this);
         if(state == 'addNode'){
-            let newId = getID();
-            nodeMap.set(newId, {name:getName(), id:newId, x, y, edges:[]});
+            addNode(x, y);
             drawGraph();
         }
     });
