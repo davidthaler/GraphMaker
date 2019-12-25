@@ -1,36 +1,46 @@
 /*
-TODO:
-X fix up getID
-2. fix up getName
-X specify the errors in get*ById
-4. commit, merge, push
+Class `Graph` holds the graph data - the nodes and edges - for graphMaker.
+There is no D3 functionality in here. 
+Information from D3 gets here using ids in the datum of each D3 element.
+The ids are written into the SVG elements themselves as the attributes
+`nodeId` or `edgeID`. Information from here gets to D3 when the node/edge
+lists are fed into the data() method of a D3 selection.
 */
-
-// Name and ID generators
-
-getName = function(){
-        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        let i=0;
-        return (function(){
-            i %= 26;
-            return letters[i++];
-        });
-    }();    //evaluated
-
-
 class Graph{
 
     constructor(){
         this.nodeMap = new Map();
         this.edgeMap = new Map();
         this.nextId = 0;
+        this.nodeNames = Graph.nodeNameGenerator();
+    }
+
+    static* nodeNameGenerator(){
+        const uppers = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        let lowers = uppers.toLowerCase();
+        for(let c of uppers){
+            yield c;
+        }
+        for(let i = 0; i < uppers.length; i++){
+            for(let j = 0; j < uppers.length; j++){
+                yield uppers[j] + lowers[j];
+            }
+            lowers = lowers.slice(1) + lowers[0];
+        }
+        for(;;){
+            yield '';
+        }
     }
 
     getID(){
         return this.nextId ++;
     }
 
-    addNode(x, y, name=getName()){
+    getNodeName(){
+        return this.nodeNames.next().value;
+    }
+
+    addNode(x, y, name=this.getNodeName()){
         let newId = this.getID();
         this.nodeMap.set(newId, {name, id:newId, x, y, edges:[]});
     }
