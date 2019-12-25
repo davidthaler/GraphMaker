@@ -1,5 +1,13 @@
+/*
+TODO:
+X fix up getID
+2. fix up getName
+X specify the errors in get*ById
+4. commit, merge, push
+*/
+
 // Name and ID generators
-getID = function(){let i=0;return function(){return i++}}();
+
 getName = function(){
         const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         let i=0;
@@ -15,17 +23,22 @@ class Graph{
     constructor(){
         this.nodeMap = new Map();
         this.edgeMap = new Map();
+        this.nextId = 0;
+    }
+
+    getID(){
+        return this.nextId ++;
     }
 
     addNode(x, y, name=getName()){
-        let newId = getID();
+        let newId = this.getID();
         this.nodeMap.set(newId, {name, id:newId, x, y, edges:[]});
     }
 
     addEdge(sid, tid){
         let s = this.getNodeById(sid);
         let t = this.getNodeById(tid);
-        let newId = getID();
+        let newId = this.getID();
         this.edgeMap.set(newId, {id:newId, s, t});
         s.edges.push(newId);
         t.edges.push(newId);
@@ -40,7 +53,7 @@ class Graph{
 
     removeNode(nodeId){
         let node = this.getNodeById(nodeId);
-        //NB: arrow fn prevents this from getting mangled
+        //NB: arrow fn prevents `this` from getting mangled
         node.edges.forEach(id => this.removeEdge(id));
         this.nodeMap.delete(node.id)
     }
@@ -60,20 +73,22 @@ class Graph{
     }
 
     getNodeById(id){
-        id = Number(id);
-        if(this.nodeMap.has(id)){
-            return this.nodeMap.get(id);
+        let nodeId = Number(id);
+        if(this.nodeMap.has(nodeId)){
+            return this.nodeMap.get(nodeId);
         }else{
-            // some error 
+            throw new KeyError(`No node with id:${id}`);
         }
     }
 
     getEdgeById(id){
-        id = Number(id);
-        if(this.edgeMap.has(id)){
-            return this.edgeMap.get(id);
+        let edgeId = Number(id);
+        if(this.edgeMap.has(edgeId)){
+            return this.edgeMap.get(edgeId);
         }else{
-            // some error
+            throw new KeyError(`No edge with id:${id}`);
         }
     }
 }
+
+class KeyError extends Error{}
