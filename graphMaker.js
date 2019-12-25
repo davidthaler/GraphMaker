@@ -3,8 +3,6 @@ Third take on graphMaker.
 */
 window.onload = main;
 
-let nodeMap = new Map();
-let edgeMap = new Map();
 let s, t;
 const RADIUS = 10;
 const FONTSIZE = 10;
@@ -12,65 +10,19 @@ const OFFSET = 3;
 let state = 'none';
 let g = new Graph();
 
-// Name and ID generators
-getID = function(){let i=0;return function(){return i++}}();
-getName = function(){
-        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        let i=0;
-        return (function(){
-            i %= 26;
-            return letters[i++];
-        });
-    }();    //evaluated
-
-// Data operations
-function addNode(x, y, name=getName()){
-    let newId = getID();
-    nodeMap.set(newId, {name, id:newId, x, y, edges:[]});
-}
-
-function addEdge(s, t){
-    let newId = getID();
-    edgeMap.set(newId, {id:newId, s, t});
-    s.edges.push(newId);
-    t.edges.push(newId);
-}
-
-function removeEdge(edgeId){
-    edgeId = Number(edgeId);
-    let edge = edgeMap.get(edgeId);
-    edge.s.edges = edge.s.edges.filter(x => x != edgeId)
-    edge.t.edges = edge.t.edges.filter(x => x != edgeId)
-    edgeMap.delete(edgeId);
-}
-
-function removeNode(nodeId){
-    nodeId = Number(nodeId);
-    let node = nodeMap.get(nodeId);
-    node.edges.forEach(removeEdge);
-    nodeMap.delete(nodeId)
-}
-
-function moveNode(nodeId, dx, dy){
-    nodeId = Number(nodeId);
-    let node = nodeMap.get(nodeId);
-    node.x += dx;
-    node.y += dy;
-}
-
 // Event handlers
 function clickNode(){
     let nodeId = Number(this.getAttribute('nodeId'));
     if(state == 'removeNode'){
-        removeNode(nodeId);
+        g.removeNode(nodeId);
         drawGraph();
     }else if(state == 'pickS'){
-        s = nodeMap.get(nodeId);
+        s = g.getNodeById(nodeId);
         state = 'pickT';
     }else if(state =='pickT'){
-        t = nodeMap.get(nodeId);
+        t = g.getNodeById(nodeId);
         // create s-t edge
-        addEdge(s, t);
+        g.addEdge(s, t);
         // reset state
         state = 'pickS';
         s = undefined;
@@ -81,7 +33,7 @@ function clickNode(){
 
 function clickEdge(){
     if(state=='removeEdge'){
-        removeEdge(this.getAttribute('edgeId'));
+        g.removeEdge(this.getAttribute('edgeId'));
         drawGraph();
     }
 }
@@ -129,7 +81,7 @@ function drawNodes(nodes){
                           .call(d3.drag().on('drag', function(){
                             if(state == 'none'){
                                 let [dx, dy] = d3.mouse(this);
-                                moveNode(this.getAttribute('nodeId'), dx, dy);
+                                g.moveNode(this.getAttribute('nodeId'), dx, dy);
                                 drawGraph();
                             }
                           }));
@@ -151,8 +103,8 @@ function drawEdges(edges){
 }
 
 function drawGraph(){
-    drawEdges([...edgeMap.values()]);
-    drawNodes([...nodeMap.values()]);
+    drawEdges(g.edges);
+    drawNodes(g.nodes);
 }
 
 // Set up graphMaker
@@ -164,7 +116,7 @@ function main(){
     d3.select('svg').on('click', function(){
         if(state == 'addNode'){
             let [x, y] = d3.mouse(this);
-            addNode(x, y);
+            g.addNode(x, y);
             drawGraph();
         }
     });
