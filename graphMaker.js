@@ -10,6 +10,7 @@ const RADIUS = 10;
 const FONTSIZE = 10;
 const OFFSET = 3;
 let state = 'none';
+let g = new Graph();
 
 // Name and ID generators
 getID = function(){let i=0;return function(){return i++}}();
