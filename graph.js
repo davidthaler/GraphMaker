@@ -22,7 +22,9 @@ class Graph{
         this.nodeMap.set(newId, {name, id:newId, x, y, edges:[]});
     }
 
-    addEdge(s, t){
+    addEdge(sid, tid){
+        let s = this.getNodeById(sid);
+        let t = this.getNodeById(tid);
         let newId = getID();
         this.edgeMap.set(newId, {id:newId, s, t});
         s.edges.push(newId);

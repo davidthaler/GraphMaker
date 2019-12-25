@@ -3,7 +3,7 @@ Third take on graphMaker.
 */
 window.onload = main;
 
-let s, t;
+let sid, tid;
 const RADIUS = 10;
 const FONTSIZE = 10;
 const OFFSET = 3;
@@ -12,18 +12,16 @@ let g = new Graph();
 
 // Event handlers
 function clickNode(){
-    let nodeId = Number(this.getAttribute('nodeId'));
+    let nodeId = this.getAttribute('nodeId');
     if(state == 'removeNode'){
         g.removeNode(nodeId);
         drawGraph();
     }else if(state == 'pickS'){
-        s = g.getNodeById(nodeId);
+        sid = nodeId;
         state = 'pickT';
     }else if(state =='pickT'){
-        t = g.getNodeById(nodeId);
-        // create s-t edge
-        g.addEdge(s, t);
-        // reset state
+        tid = nodeId;
+        g.addEdge(sid, tid);
         state = 'pickS';
         s = undefined;
         t = undefined;
