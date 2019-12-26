@@ -49,7 +49,7 @@ class Graph{
         let s = this.getNodeById(sid);
         let t = this.getNodeById(tid);
         let newId = this.getID();
-        this.edgeMap.set(newId, {id:newId, s, t});
+        this.edgeMap.set(newId, new Edge(newId, s, t));
         s.edges.push(newId);
         t.edges.push(newId);
     }
@@ -104,6 +104,28 @@ class Graph{
     // They are not required and do not have to be unique.
     getNodeByName(name){
         return this.nodes.find(n => (n.name == name));
+    }
+}
+
+class Edge{
+    constructor(id, s, t){
+        this.id = id;
+        this.s = s;
+        this.t = t
+    }
+
+    get name(){
+        return this.s.name + '-' + this.t.name;
+    }
+
+    other(node){
+        if(this.s === node){
+            return this.t;
+        }else if(this.t === node){
+            return this.s;
+        }else{
+            throw new Error('Node argument not an endpoint of this edge');
+        }
     }
 }
 
