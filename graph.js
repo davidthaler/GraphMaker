@@ -40,6 +40,14 @@ class Graph{
         return this.nodeNames.next().value;
     }
 
+    fillNodeProperty(name, value){
+        this.nodeMap.forEach(n => n[name] = value);
+    }
+
+    fillEdgeProperty(name, value){
+        this.edgeMap.forEach(n => n[name] = value);
+    }
+
     incidentTo(node){
         return node.edges.map(eid => this.getEdgeById(eid));
     }
