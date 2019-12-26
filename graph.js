@@ -114,53 +114,8 @@ class Graph{
         }
     }
 
-    // Not finding a name is not a KeyError because the names are not keys.
-    // They are not required and do not have to be unique.
     getNodeByName(name){
         return this.nodes.find(n => (n.name == name));
-    }
-}
-
-class Node{
-    constructor(graph, id, name, x, y){
-        this.graph = graph;
-        this.id = id;
-        this.name = name;
-        this.x = x;
-        this.y = y;
-        this.edges = [];
-    }
-
-    neighbors(){
-        let out = [];
-        for(let eid of this.edges){
-            let edge = this.graph.getEdgeById(eid);
-            out.push(edge.other(this));
-        }
-        return out;
-    }
-}
-
-class Edge{
-    constructor(graph, id, s, t){
-        this.graph = graph;
-        this.id = id;
-        this.s = s;
-        this.t = t
-    }
-
-    get name(){
-        return this.s.name + '-' + this.t.name;
-    }
-
-    other(node){
-        if(this.s === node){
-            return this.t;
-        }else if(this.t === node){
-            return this.s;
-        }else{
-            throw new Error('Node argument not an endpoint of this edge');
-        }
     }
 }
 
