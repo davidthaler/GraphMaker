@@ -86,7 +86,9 @@ function drawNodes(nodes){
                             }
                           }));
     nodeSel = newNodes.merge(nodeSel);
-    nodeSel.attr('transform', translate).raise();
+    nodeSel.attr('transform', translate).raise()
+           .select('circle')
+           .attr('fill', d => d.stateColor ? d.stateColor : 'darkgray');
 }
 
 function drawEdges(edges){
@@ -100,6 +102,7 @@ function drawEdges(edges){
     edgeSel = newEdges.merge(edgeSel);
     edgeSel.attr('x1', d => d.s.x).attr('y1', d => d.s.y)
            .attr('x2', d => d.t.x).attr('y2', d => d.t.y)
+           .attr('stroke', d => d.stateColor ? d.stateColor : 'lightgray')
 }
 
 function drawGraph(){
