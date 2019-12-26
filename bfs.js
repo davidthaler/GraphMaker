@@ -4,22 +4,25 @@ Explores the connected component from startNode
 */
 
 const nodeStates = {'unexplored': 'darkgray',
-                    'visited'   : 'red',
-                    'completed' : 'darkslategray'};
+                    'visited'   : 'pink',
+                    'completed' : 'red'};
 
 const edgeStates = {'unexplored': 'lightgray',
                     'visited'   : 'pink',
                     'completed' : 'black'};
 
 function BFS(g, startNodeName){
-    g.fillEdgeProperty('stateColor', edgeStates.unexplored);
-    g.fillNodeProperty('stateColor', nodeStates.unexplored);
-    drawGraph();
     g.fillNodeProperty('visited', false);
     let startNode = g.getNodeByName(startNodeName);
-    let Q = [startNode];
     startNode.visited = true;
+    let Q = [startNode];
+    let k = 0
+
+    g.fillEdgeProperty('stateColor', edgeStates.unexplored);
+    g.fillNodeProperty('stateColor', nodeStates.unexplored);
     startNode.stateColor = nodeStates.visited;
+    colorGraph(k++);
+
     while(Q.length > 0){
         let currentNode = Q.shift();
         for(let n of g.neighbors(currentNode)){
@@ -27,10 +30,10 @@ function BFS(g, startNodeName){
                 Q.push(n);
                 n.visited = true;
                 n.stateColor = nodeStates.visited;
-                drawGraph();
+                colorGraph(k++);
             }
         }
         currentNode.stateColor = nodeStates.completed;
-        drawGraph();
+        colorGraph(k++);
     }
 }

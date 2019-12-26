@@ -7,6 +7,8 @@ let sid, tid;
 const RADIUS = 10;
 const FONTSIZE = 10;
 const OFFSET = 3;
+let DURATION_MS = 250;
+let DELAY_MS = 250;
 let state = 'none';
 let g = new Graph();
 
@@ -86,9 +88,7 @@ function drawNodes(nodes){
                             }
                           }));
     nodeSel = newNodes.merge(nodeSel);
-    nodeSel.attr('transform', translate).raise()
-           .select('circle')
-           .attr('fill', d => d.stateColor ? d.stateColor : 'darkgray');
+    nodeSel.attr('transform', translate).raise();
 }
 
 function drawEdges(edges){
@@ -101,13 +101,23 @@ function drawEdges(edges){
                           .on('click', clickEdge);
     edgeSel = newEdges.merge(edgeSel);
     edgeSel.attr('x1', d => d.s.x).attr('y1', d => d.s.y)
-           .attr('x2', d => d.t.x).attr('y2', d => d.t.y)
-           .attr('stroke', d => d.stateColor ? d.stateColor : 'lightgray')
+           .attr('x2', d => d.t.x).attr('y2', d => d.t.y);
 }
 
 function drawGraph(){
     drawEdges(g.edges);
     drawNodes(g.nodes);
+}
+
+function colorGraph(k){
+    // d3.selectAll('line.edge')
+    //     .data(g.edges)
+    //     .transition().duration(DURATION_MS).delay(DELAY_MS * k)
+    //     .attr('stroke', d => d.stateColor);
+    d3.selectAll('circle.nodeCircle')
+        .data(g.nodes)
+        .transition().duration(DURATION_MS).delay(DELAY_MS * k)
+        .attr('fill', d => d.stateColor);
 }
 
 // Set up graphMaker
