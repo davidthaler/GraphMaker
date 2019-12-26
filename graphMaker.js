@@ -62,6 +62,8 @@ function node(sel){
         .attr('font-family', 'sans-serif')
         .classed('nodeLabel', true)
         .text(d => d.name);
+
+    sel.classed('node', true);
 }
 
 function translate(d){
