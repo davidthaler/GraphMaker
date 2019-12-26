@@ -40,16 +40,30 @@ class Graph{
         return this.nodeNames.next().value;
     }
 
+    incidentTo(node){
+        return node.edges.map(eid => this.getEdgeById(eid));
+    }
+
+    // this could be if...else if...throw Error
+    otherEnd(node, edge){
+        return (node === edge.s) ? edge.t : edge.s;
+    }
+
+    neighbors(node){
+        let edges = this.incidentTo(node);
+        return edges.map(e => this.otherEnd(node, e));
+    }
+
     addNode(x, y, name=this.nextNodeName()){
         let newId = this.getID();
-        this.nodeMap.set(newId, new Node(this, newId, name, x, y));
+        this.nodeMap.set(newId, {id:newId, name, x, y, edges:[]});
     }
 
     addEdge(sid, tid){
         let s = this.getNodeById(sid);
         let t = this.getNodeById(tid);
         let newId = this.getID();
-        this.edgeMap.set(newId, new Edge(this, newId, s, t));
+        this.edgeMap.set(newId, {id:newId, s, t});
         s.edges.push(newId);
         t.edges.push(newId);
     }
