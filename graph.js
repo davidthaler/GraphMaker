@@ -42,14 +42,14 @@ class Graph{
 
     addNode(x, y, name=this.nextNodeName()){
         let newId = this.getID();
-        this.nodeMap.set(newId, {name, id:newId, x, y, edges:[]});
+        this.nodeMap.set(newId, new Node(this, newId, name, x, y));
     }
 
     addEdge(sid, tid){
         let s = this.getNodeById(sid);
         let t = this.getNodeById(tid);
         let newId = this.getID();
-        this.edgeMap.set(newId, new Edge(newId, s, t));
+        this.edgeMap.set(newId, new Edge(this, newId, s, t));
         s.edges.push(newId);
         t.edges.push(newId);
     }
@@ -107,8 +107,29 @@ class Graph{
     }
 }
 
+class Node{
+    constructor(graph, id, name, x, y){
+        this.graph = graph;
+        this.id = id;
+        this.name = name;
+        this.x = x;
+        this.y = y;
+        this.edges = [];
+    }
+
+    neighbors(){
+        let out = [];
+        for(let eid of this.edges){
+            let edge = this.graph.getEdgeById(eid);
+            out.push(edge.other(this));
+        }
+        return out;
+    }
+}
+
 class Edge{
-    constructor(id, s, t){
+    constructor(graph, id, s, t){
+        this.graph = graph;
         this.id = id;
         this.s = s;
         this.t = t
