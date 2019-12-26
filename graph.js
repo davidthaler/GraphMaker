@@ -2,9 +2,9 @@
 Class `Graph` holds the graph data - the nodes and edges - for graphMaker.
 There is no D3 functionality in here. 
 Information from D3 gets here using ids in the datum of each D3 element.
-The ids are written into the SVG elements themselves as the attributes
-`nodeId` or `edgeID`. Information from here gets to D3 when the node/edge
-lists are fed into the data() method of a D3 selection.
+The ids are written into the SVG elements themselves as attributes.
+Information from here gets to D3 when the node or edge state is changed,
+and then node/edge lists are fed into the data() method of a D3 selection.
 */
 class Graph{
 
@@ -36,11 +36,11 @@ class Graph{
         return this.nextId ++;
     }
 
-    getNodeName(){
+    nextNodeName(){
         return this.nodeNames.next().value;
     }
 
-    addNode(x, y, name=this.getNodeName()){
+    addNode(x, y, name=this.nextNodeName()){
         let newId = this.getID();
         this.nodeMap.set(newId, {name, id:newId, x, y, edges:[]});
     }
@@ -63,7 +63,7 @@ class Graph{
 
     removeNode(nodeId){
         let node = this.getNodeById(nodeId);
-        //NB: arrow fn prevents `this` from getting mangled
+        // arrow fn avoids mangling `this` pointer
         node.edges.forEach(id => this.removeEdge(id));
         this.nodeMap.delete(node.id)
     }
@@ -98,6 +98,12 @@ class Graph{
         }else{
             throw new KeyError(`No edge with id:${id}`);
         }
+    }
+
+    // Not finding a name is not a KeyError because the names are not keys.
+    // They are not required and do not have to be unique.
+    getNodeByName(name){
+        return this.nodes.find(n => (n.name == name));
     }
 }
 
