@@ -7,8 +7,8 @@ let sid, tid;
 const RADIUS = 10;
 const FONTSIZE = 10;
 const OFFSET = 3;
-let DURATION_MS = 250;
-let DELAY_MS = 250;
+let DURATION_MS = 100;
+let DELAY_MS = 500;
 let state = 'none';
 let g = new Graph();
 

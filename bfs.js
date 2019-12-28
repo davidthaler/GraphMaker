@@ -5,6 +5,7 @@ Explores the connected component from startNode
 
 const nodeStates = {'unexplored': 'darkgray',
                     'visited'   : 'pink',
+                    'active'    : 'yellow',
                     'completed' : 'red'};
 
 const edgeStates = {'unexplored': 'lightgray',
@@ -25,6 +26,8 @@ function BFS(g, startNodeName){
 
     while(Q.length > 0){
         let currentNode = Q.shift();
+        currentNode.stateColor = nodeStates.active;
+        colorGraph(k++);
         for(let n of g.neighbors(currentNode)){
             if(!n.visited){
                 Q.push(n);
