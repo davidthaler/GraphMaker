@@ -12,8 +12,8 @@ const edgeStates = {'unexplored': 'lightgray',
                     'visited'   : 'pink',
                     'completed' : 'black'};
 
-function BFS(g, startNodeName){
-    let startNode = g.getNodeByName(startNodeName);
+function BFS(g, startNodeId){
+    let startNode = g.getNodeById(startNodeId);
     let Q = [startNode];
 
     let k = 0
