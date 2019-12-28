@@ -13,12 +13,10 @@ const edgeStates = {'unexplored': 'lightgray',
                     'completed' : 'black'};
 
 function BFS(g, startNodeName){
-    g.fillNodeProperty('visited', false);
     let startNode = g.getNodeByName(startNodeName);
-    startNode.visited = true;
     let Q = [startNode];
-    let k = 0
 
+    let k = 0
     g.fillEdgeProperty('stateColor', edgeStates.unexplored);
     g.fillNodeProperty('stateColor', nodeStates.unexplored);
     startNode.stateColor = nodeStates.visited;
@@ -29,9 +27,8 @@ function BFS(g, startNodeName){
         currentNode.stateColor = nodeStates.active;
         colorGraph(k++);
         for(let n of g.neighbors(currentNode)){
-            if(!n.visited){
+            if(n.stateColor == nodeStates.unexplored){
                 Q.push(n);
-                n.visited = true;
                 n.stateColor = nodeStates.visited;
                 colorGraph(k++);
             }
