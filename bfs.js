@@ -4,13 +4,13 @@ Explores the connected component from startNode
 */
 
 const nodeStates = {'unexplored': 'darkgray',
-                    'visited'   : 'pink',
-                    'active'    : 'yellow',
-                    'completed' : 'red'};
+                    'visited'   : 'firebrick',
+                    'active'    : 'darkorange',
+                    'completed' : 'gray'};
 
 const edgeStates = {'unexplored': 'lightgray',
-                    'visited'   : 'pink',
-                    'completed' : 'black'};
+                    'visited'   : 'darkgray',
+                    'completed' : 'darkgray'};
 
 function BFS(g, startNodeId){
     let startNode = g.getNodeById(startNodeId);
