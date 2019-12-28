@@ -110,10 +110,10 @@ function drawGraph(){
 }
 
 function colorGraph(k){
-    // d3.selectAll('line.edge')
-    //     .data(g.edges)
-    //     .transition().duration(DURATION_MS).delay(DELAY_MS * k)
-    //     .attr('stroke', d => d.stateColor);
+    d3.selectAll('line.edge')
+        .data(g.edges)
+        .transition().duration(DURATION_MS).delay(DELAY_MS * k)
+        .attr('stroke', d => d.stateColor);
     d3.selectAll('circle.nodeCircle')
         .data(g.nodes)
         .transition().duration(DURATION_MS).delay(DELAY_MS * k)

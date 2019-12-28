@@ -26,12 +26,15 @@ function BFS(g, startNodeName){
         let currentNode = Q.shift();
         currentNode.stateColor = nodeStates.active;
         colorGraph(k++);
-        for(let n of g.neighbors(currentNode)){
+        for(let e of g.incidentTo(currentNode)){
+            let n = g.otherEnd(currentNode, e);
             if(n.stateColor == nodeStates.unexplored){
                 Q.push(n);
                 n.stateColor = nodeStates.visited;
                 colorGraph(k++);
             }
+            e.stateColor = (n.stateColor == nodeStates.completed) 
+                                ? edgeStates.completed : edgeStates.visited;
         }
         currentNode.stateColor = nodeStates.completed;
         colorGraph(k++);
