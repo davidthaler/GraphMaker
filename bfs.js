@@ -31,10 +31,10 @@ function BFS(g, startNodeName){
             if(n.stateColor == nodeStates.unexplored){
                 Q.push(n);
                 n.stateColor = nodeStates.visited;
-                colorGraph(k++);
             }
             e.stateColor = (n.stateColor == nodeStates.completed) 
                                 ? edgeStates.completed : edgeStates.visited;
+            colorGraph(k++);
         }
         currentNode.stateColor = nodeStates.completed;
         colorGraph(k++);
