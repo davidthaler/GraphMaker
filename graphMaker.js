@@ -28,6 +28,8 @@ function clickNode(){
         s = undefined;
         t = undefined;
         drawGraph();
+    }else if(state=='runBFS'){
+        BFS(g, nodeId);
     }
 }
 
@@ -35,20 +37,6 @@ function clickEdge(){
     if(state=='removeEdge'){
         g.removeEdge(this.getAttribute('edgeId'));
         drawGraph();
-    }
-}
-
-// Closure that returns button click handlers
-function buttonClick(states){
-    states = (states instanceof Array) ? states : [states];
-    return function(){
-        d3.selectAll('button').classed('state-active', false);
-        if(states.includes(state)){
-            state = 'none';
-        }else{
-            state = states[0];
-            d3.select(this).classed('state-active', true);
-        }
     }
 }
 
@@ -120,12 +108,27 @@ function colorGraph(k){
         .attr('fill', d => d.stateColor);
 }
 
+// Closure that returns button click handlers
+function buttonClick(states){
+    states = (states instanceof Array) ? states : [states];
+    return function(){
+        d3.selectAll('button').classed('state-active', false);
+        if(states.includes(state)){
+            state = 'none';
+        }else{
+            state = states[0];
+            d3.select(this).classed('state-active', true);
+        }
+    }
+}
+
 // Set up graphMaker
 function main(){
     d3.select('#addNode').on('click', buttonClick('addNode'));
     d3.select('#removeNode').on('click', buttonClick('removeNode'));
     d3.select('#addEdge').on('click', buttonClick(['pickS', 'pickT']));
     d3.select('#removeEdge').on('click', buttonClick('removeEdge'));
+    d3.select('#runBFS').on('click', buttonClick('runBFS'));
     d3.select('svg').on('click', function(){
         if(state == 'addNode'){
             let [x, y] = d3.mouse(this);
