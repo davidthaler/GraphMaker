@@ -11,6 +11,7 @@ let DURATION_MS = 100;
 let DELAY_MS = 500;
 let state = 'none';
 let g = new Graph();
+const indexName = 'GraphMakerSavedGraphNames';
 
 // Event handlers
 function clickNode(){
@@ -106,6 +107,37 @@ function colorGraph(k){
         .data(g.nodes)
         .transition().duration(DURATION_MS).delay(DELAY_MS * k)
         .attr('fill', d => d.stateColor);
+}
+
+function loadSavedGraph(graphName){
+    let graphString = localStorage.getItem(graphName);
+    if(graphString){
+        g = Graph.fromJSON(graphString);
+        drawGraph();
+    }else{
+        console.error(`No saved graph: ${graphName}`);
+    }
+}
+
+function savedGraphNames(){
+    return JSON.parse(localStorage.getItem(indexName));
+}
+
+function saveGraph(graphName){
+    let gnames = savedGraphNames();
+    if(!gnames.includes(graphName)){
+        gnames.push(graphName);
+        localStorage.setItem(indexName, JSON.stringify(gnames));
+    }else{
+        console.warn(`Overwriting existing graph ${graphName}`);
+    }
+    localStorage.setItem(graphName, g.toJSON());
+    console.log(`Saved current graph as ${graphName}`);
+}
+
+function clearGraph(){
+    g = new Graph();
+    drawGraph();
 }
 
 // Closure that returns button click handlers
