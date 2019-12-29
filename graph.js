@@ -15,6 +15,38 @@ class Graph{
         this.nodeNames = Graph.nodeNameGenerator();
     }
 
+    toJSON(){
+        function simplify(e){
+            let out = {};
+            for(let k of Object.keys(e)){
+                if(['s','t'].includes(k)){
+                    out[k] = e[k].id;
+                }else{out[k]=e[k];}
+            }
+            return out;
+        }
+        let altEdges = this.edges.map(simplify);
+        let output = {nextId:this.nextId,
+                      nodes:this.nodes,
+                      edges:altEdges};
+        return JSON.stringify(output);
+    }
+
+    static fromJSON(json){
+        let data = JSON.parse(json);
+        let g = new Graph();
+        g.nextId = data.nextId;
+        for(let n of data.nodes){
+            g.nodeMap.set(n.id, n);
+        }
+        for(let e of data.edges){
+            e.s = g.getNodeById(e.s);
+            e.t = g.getNodeById(e.t);
+            g.edgeMap.set(e.id, e);
+        }
+        return g;
+    }
+
     static* nodeNameGenerator(){
         const uppers = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         let lowers = uppers.toLowerCase();
