@@ -120,7 +120,24 @@ function loadSavedGraph(graphName){
 }
 
 function savedGraphNames(){
-    return JSON.parse(localStorage.getItem(indexName));
+    return JSON.parse(localStorage.getItem(indexName)) || [];
+}
+
+function makeLoadSelector(){
+    let gnames = savedGraphNames();
+    let sel = document.getElementById('loadSavedGraph');
+    for(let l of gnames){
+        let opt = document.createElement('option');
+        opt.value = l;
+        opt.text = l;
+        sel.append(opt);
+    }
+    sel.addEventListener('change', function(){
+        if(this.value != 'noSelection'){
+            loadSavedGraph(this.value);
+            drawGraph();
+        }
+    });
 }
 
 function saveGraph(graphName){
@@ -161,6 +178,7 @@ function main(){
     d3.select('#addEdge').on('click', buttonClick(['pickS', 'pickT']));
     d3.select('#removeEdge').on('click', buttonClick('removeEdge'));
     d3.select('#runBFS').on('click', buttonClick('runBFS'));
+    makeLoadSelector();
     d3.select('svg').on('click', function(){
         if(state == 'addNode'){
             let [x, y] = d3.mouse(this);
