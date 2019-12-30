@@ -112,6 +112,7 @@ function colorGraph(k){
 function loadSavedGraph(graphName){
     let graphString = localStorage.getItem(graphName);
     if(graphString){
+        clearGraph();
         g = Graph.fromJSON(graphString);
         drawGraph();
     }else{
