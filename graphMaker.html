@@ -12,6 +12,31 @@
             .state-active{
                 background-color: lightgray;
             }
+            #main{
+                max-width:650px;
+            }
+            .modal{
+                display: none;
+                background-color:rgba(0,0,0,0.2);
+                z-index:1;
+                position: fixed;
+                left:0;
+                top:0;
+                padding-top: 200px;
+                width:100%;
+                height:100%;
+            }
+            .modal-content{
+                font-family: Arial, Helvetica, sans-serif;
+                background-color: white;
+                max-width:358px;
+                margin-left:100px;
+                padding: 20px;
+                border: 1px solid gray;
+            }
+            #modal-controls{
+                float: right;
+            }
         </style>
         <script src="https://d3js.org/d3.v5.min.js"></script>
         <script src="graph.js"></script>
@@ -25,13 +50,27 @@
             <button id="addEdge">Add Edge</button>
             <button id="removeEdge">Remove Edge</button>
             <button id="runBFS">Run BFS</button>
-            <label>Load Saved Graph: </label>
+            <label>Load Graph: </label>
             <select id="loadSavedGraph">
                 <option value="noSelection">None</option>
             </select>
+            <button id="saveGraph">Save</button>
         </div>
-        <svg version="1.1" baseProfile="full" width="600" height="600" 
-            xmlns="http://www.w3.org/2000/svg">
-        </svg>
+        <div id="main" class="main">
+            <svg version="1.1" baseProfile="full" width="600" height="600" 
+                xmlns="http://www.w3.org/2000/svg">
+            </svg>
+            <div id="saveModalBackground" class="modal">
+                <div id='saveModalDialog' class="modal-content">
+                    <label>Save As: </label>
+                    <input id="graphName" type="text" maxlength="14" size="15">
+                    <span id="modal-controls">
+                        <button id="saveFinal">Save</button>
+                        <button id="saveCancel">Cancel</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+
     </body> 
 </html>

@@ -153,6 +153,26 @@ function saveGraph(graphName){
     console.log(`Saved current graph as ${graphName}`);
 }
 
+function makeSaveDialog(){
+    d3.select('#saveGraph').on('click', function(){
+        d3.selectAll('button').classed('state-active', false);
+        d3.select('div.modal').style('display', 'block');
+    });
+    d3.select('#saveCancel').on('click', function(){
+        d3.select('div.modal').style('display', 'none');
+    });
+    d3.select('#saveFinal').on('click', function(){
+        let graphName = document.getElementById('graphName').value;
+        // TODO: check for valid name
+        saveGraph(graphName);
+        d3.select('#loadSavedGraph')
+          .append('option')
+          .attr('value', graphName)
+          .text(graphName);
+        d3.select('div.modal').style('display', 'none');
+    });
+}
+
 function clearGraph(){
     g = new Graph();
     drawGraph();
@@ -180,6 +200,7 @@ function main(){
     d3.select('#removeEdge').on('click', buttonClick('removeEdge'));
     d3.select('#runBFS').on('click', buttonClick('runBFS'));
     makeLoadSelector();
+    makeSaveDialog();
     d3.select('svg').on('click', function(){
         if(state == 'addNode'){
             let [x, y] = d3.mouse(this);
