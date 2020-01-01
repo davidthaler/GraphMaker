@@ -1,5 +1,6 @@
 /*
-Third take on graphMaker. 
+GraphMaker creates graphs, can save and reload them in local storage,
+and enables animation of graph algorithms over those graphs using D3.
 */
 window.onload = main;
 
