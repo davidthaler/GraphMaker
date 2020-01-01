@@ -163,13 +163,22 @@ function makeSaveDialog(){
     });
     d3.select('#saveFinal').on('click', function(){
         let graphName = document.getElementById('graphName').value;
-        // TODO: check for valid name
-        saveGraph(graphName);
-        d3.select('#loadSavedGraph')
-          .append('option')
-          .attr('value', graphName)
-          .text(graphName);
-        d3.select('div.modal').style('display', 'none');
+        // accepting minimum 2 word characters, initial letter required
+        let pat = /^[a-zA-Z]+\w+/;
+        let m = graphName.match(pat);
+        if(m != null && m[0] == graphName){
+            let overwrite = (savedGraphNames().includes(graphName));
+            saveGraph(graphName);
+            if(!overwrite){
+                d3.select('#loadSavedGraph')
+                .append('option')
+                .attr('value', graphName)
+                .text(graphName);
+            }
+            d3.select('div.modal').style('display', 'none');
+        }else{
+            console.warn(`Illegal graph name: ${graphName}`);
+        }
     });
 }
 
