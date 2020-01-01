@@ -12,7 +12,7 @@ class Graph{
         this.nodeMap = new Map();
         this.edgeMap = new Map();
         this.nextId = 0;
-        this.nodeNames = Graph.nodeNameGenerator();
+        this.nameState = 0;
     }
 
     toJSON(){
@@ -26,9 +26,10 @@ class Graph{
             return out;
         }
         let altEdges = this.edges.map(simplify);
-        let output = {nextId:this.nextId,
-                      nodes:this.nodes,
-                      edges:altEdges};
+        let output = {nextId    :this.nextId,
+                      nameState :this.nameState,
+                      nodes     :this.nodes,
+                      edges     :altEdges};
         return JSON.stringify(output);
     }
 
@@ -36,6 +37,7 @@ class Graph{
         let data = JSON.parse(json);
         let g = new Graph();
         g.nextId = data.nextId;
+        g.nameState = data.nameState;
         for(let n of data.nodes){
             g.nodeMap.set(n.id, n);
         }
@@ -47,29 +49,26 @@ class Graph{
         return g;
     }
 
-    static* nodeNameGenerator(){
-        const uppers = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        let lowers = uppers.toLowerCase();
-        for(let c of uppers){
-            yield c;
-        }
-        for(let i = 0; i < uppers.length; i++){
-            for(let j = 0; j < uppers.length; j++){
-                yield uppers[j] + lowers[j];
-            }
-            lowers = lowers.slice(1) + lowers[0];
-        }
-        for(;;){
-            yield '';
-        }
-    }
-
     getID(){
         return this.nextId ++;
     }
 
     nextNodeName(){
-        return this.nodeNames.next().value;
+        const uppers = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        let len = uppers.length;
+        let label;
+        if(this.nameState < len){
+            label = uppers[this.nameState];
+        }else if(this.nameState < (len + len * len)){
+            let i = this.nameState % len;
+            let jOffset = ((this.nameState - len) / len) | 0;
+            let j = (i + jOffset) % len;
+            label = uppers[i] + uppers[j].toLowerCase();
+        }else{
+            label = '';
+        }
+        this.nameState += 1;
+        return label;
     }
 
     fillNodeProperty(name, value){
