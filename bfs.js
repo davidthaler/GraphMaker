@@ -9,7 +9,8 @@ const nodeStates = {'unexplored': 'darkgray',
                     'completed' : 'gray'};
 
 const edgeStates = {'unexplored': 'lightgray',
-                    'visited'   : 'darkgray',
+                    'visited'   : 'firebrick',
+                    'unused'    : 'whitesmoke',
                     'completed' : 'darkgray'};
 
 function BFS(g, startNodeId){
@@ -31,9 +32,13 @@ function BFS(g, startNodeId){
             if(n.stateColor == nodeStates.unexplored){
                 Q.push(n);
                 n.stateColor = nodeStates.visited;
+                e.stateColor = edgeStates.visited;
+            }else if(e.stateColor == edgeStates.visited 
+                        && n.stateColor == nodeStates.completed){
+                e.stateColor = edgeStates.completed;
+            }else{
+                e.stateColor = edgeStates.unused;
             }
-            e.stateColor = (n.stateColor == nodeStates.completed) 
-                                ? edgeStates.completed : edgeStates.visited;
             colorGraph(k++);
         }
         currentNode.stateColor = nodeStates.completed;
