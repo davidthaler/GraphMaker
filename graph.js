@@ -99,12 +99,14 @@ class Graph{
     }
 
     addEdge(sid, tid){
+        if(sid==tid) return false;
         let s = this.getNodeById(sid);
         let t = this.getNodeById(tid);
         let newId = this.getID();
         this.edgeMap.set(newId, {id:newId, s, t});
         s.edges.push(newId);
         t.edges.push(newId);
+        return true;
     }
 
     removeEdge(edgeId){

@@ -25,11 +25,16 @@ function clickNode(){
         state = 'pickT';
     }else if(state =='pickT'){
         tid = nodeId;
-        g.addEdge(sid, tid);
-        state = 'pickS';
-        s = undefined;
-        t = undefined;
-        drawGraph();
+        let added = g.addEdge(sid, tid);
+        if(added){
+            state = 'pickS';
+            sid = undefined;
+            tid = undefined;
+            drawGraph();
+        }else{
+            state = 'pickT';
+            tid = undefined;
+        }
     }else if(state=='runBFS'){
         BFS(g, nodeId);
     }
