@@ -10,7 +10,7 @@ const nodeStates = {'unexplored': 'darkgray',
 
 const edgeStates = {'unexplored': 'lightgray',
                     'visited'   : 'firebrick',
-                    'unused'    : 'whitesmoke',
+                    'unused'    : '#E8E8E8',
                     'completed' : 'darkgray'};
 
 function BFS(g, startNodeId){
