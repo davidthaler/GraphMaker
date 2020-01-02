@@ -1,25 +1,22 @@
 /*
 DFS traversal.
 */
-
-let k;
-
 function DFS(g, startNodeId){
-    k = 0;
+    let k = 0;
     g.fillNodeProperty('stateColor', nodeStates.unexplored);
     g.fillEdgeProperty('stateColor', edgeStates.unexplored);
     colorGraph(k++);
-    dfs(g, g.getNodeById(startNodeId));
+    dfs(g, g.getNodeById(startNodeId), k);
 }
 
-function dfs(g, s){
+function dfs(g, s, k){
     s.stateColor = nodeStates.visited;
     colorGraph(k++);
     for(let e of g.incidentTo(s)){
         let n = g.otherEnd(s, e);
         if(n.stateColor == nodeStates.unexplored){
             e.stateColor = edgeStates.visited;
-            dfs(g, n);
+            k = dfs(g, n, k);
             e.stateColor = edgeStates.completed;
         }else if(e.stateColor == edgeStates.unexplored){
             // NB: unexamined edge to a previously seen node
@@ -29,4 +26,5 @@ function dfs(g, s){
     }
     s.stateColor = nodeStates.completed;
     colorGraph(k++);
+    return k;
 }
