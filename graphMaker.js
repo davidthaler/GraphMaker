@@ -32,8 +32,10 @@ function clickNode(){
             tid = undefined;
             drawGraph();
         }else{
-            state = 'pickT';
+            state = 'none';
+            sid = undefined;
             tid = undefined;
+            d3.selectAll('button').classed('state-active', false);
         }
     }else if(state=='runBFS'){
         BFS(g, nodeId);

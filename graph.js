@@ -102,6 +102,7 @@ class Graph{
         if(sid==tid) return false;
         let s = this.getNodeById(sid);
         let t = this.getNodeById(tid);
+        if(this.neighbors(t).includes(s)) return false;
         let newId = this.getID();
         this.edgeMap.set(newId, {id:newId, s, t});
         s.edges.push(newId);
