@@ -177,8 +177,8 @@ function closeSaveModal(){
     d3.select('div.modal').style('display', 'none');
     d3.select('#graphName').node().value = '';
     d3.select('p.toastText')
-    .classed('errorText', false)
-    .text('...');
+      .classed('errorText', false)
+      .text('...');
 }
 
 function makeSaveDialog(){
