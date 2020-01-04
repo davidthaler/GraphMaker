@@ -161,6 +161,18 @@ function saveGraph(graphName){
     console.log(`Saved current graph as ${graphName}`);
 }
 
+function deleteGraph(graphName){
+    let gnames = savedGraphNames();
+    if(gnames.includes(graphName)){
+        gnames.splice(gnames.findIndex(x => x == graphName), 1);
+        localStorage.setItem(indexName, JSON.stringify(gnames));
+        localStorage.removeItem(graphName);
+        console.log(`Deleted ${graphName} from localStorage`);
+    }else{
+        console.error(`${graphName} not present in localStorage`);
+    }
+}
+
 function closeSaveModal(){
     d3.select('div.modal').style('display', 'none');
     d3.select('#graphName').node().value = '';
@@ -177,7 +189,7 @@ function makeSaveDialog(){
     d3.select('#saveFinal').on('click', function(){
         let graphName = document.getElementById('graphName').value;
         // accepting minimum 2 word characters
-        let pat = /^\w{2,14}/;
+        let pat = /^\w{2,12}/;
         let m = graphName.match(pat);
         if(m != null && m[0] == graphName){
             let overwrite = (savedGraphNames().includes(graphName));
@@ -190,7 +202,9 @@ function makeSaveDialog(){
             }
             closeSaveModal();
         }else{
-            console.warn(`Illegal graph name: ${graphName}`);
+            console.warn(`Illegal graph name: ${graphName}.`
+                + ' Graph name must be 2-12 word characters');
+            d3.select('#graphName').node().value = '';
         }
     });
 }
