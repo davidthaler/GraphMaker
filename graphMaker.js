@@ -20,8 +20,6 @@ function clickNode(){
     if(state == 'removeNode'){
         g.removeNode(nodeId);
         drawGraph();
-    }else if(state == 'addNode'){
-        d3.event.stopPropagation();
     }else if(state == 'pickS'){
         sid = nodeId;
         state = 'pickT';
@@ -244,8 +242,11 @@ function main(){
     d3.select('svg').on('click', function(){
         if(state == 'addNode'){
             let [x, y] = d3.mouse(this);
-            g.addNode(x, y);
-            drawGraph();
+            let ds = g.nodes.map(n => (n.x - x)**2 + (n.y - y)**2);
+            if(!ds.some(d => d < (2*RADIUS)**2)){
+                g.addNode(x, y);
+                drawGraph();
+            }
         }
     });
 }
