@@ -20,6 +20,8 @@ function clickNode(){
     if(state == 'removeNode'){
         g.removeNode(nodeId);
         drawGraph();
+    }else if(state == 'addNode'){
+        d3.event.stopPropagation();
     }else if(state == 'pickS'){
         sid = nodeId;
         state = 'pickT';
