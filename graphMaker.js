@@ -184,9 +184,7 @@ function makeSaveDialog(){
         d3.selectAll('button').classed('state-active', false);
         d3.select('div.modal').style('display', 'block');
     });
-    d3.select('#saveCancel').on('click', function(){
-        closeSaveModal();
-    });
+    d3.select('#saveCancel').on('click', closeSaveModal);
     d3.select('#saveFinal').on('click', function(){
         let graphName = document.getElementById('graphName').value;
         // accepting minimum 2 word characters
@@ -209,6 +207,11 @@ function makeSaveDialog(){
             d3.select('#graphName').node().value = '';
         }
     });
+    d3.select('div.modal').on('click', closeSaveModal);
+    d3.select('div.modal-content').on('click', 
+            function(){
+                d3.event.stopPropagation()
+            });
 }
 
 function clearGraph(){
