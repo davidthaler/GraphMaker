@@ -51,11 +51,9 @@ svg{
 
 #modal-controls{ float: right; }
 
-p.errorText{
-    color:red;
-    }
-
-p.toastText{
+#saveErrorMessage{
         margin: 0;
         font-size: 10px;
+        color:red;
+        visibility: hidden;
     }

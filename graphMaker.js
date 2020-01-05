@@ -176,9 +176,7 @@ function deleteGraph(graphName){
 function closeSaveModal(){
     d3.select('div.modal').style('display', 'none');
     d3.select('#graphName').node().value = '';
-    d3.select('p.toastText')
-      .classed('errorText', false)
-      .text('...');
+    d3.select('#saveErrorMessage').node().style.visibility = 'hidden';
 }
 
 function makeSaveDialog(){
@@ -207,9 +205,7 @@ function makeSaveDialog(){
         }else{
             console.warn(`Illegal graph name: ${graphName}.`
                 + ' Graph name must be 2-12 word characters');
-            d3.select('p.toastText')
-              .classed('errorText', true)
-              .text('Name must be 2-12 word characters');
+            d3.select('#saveErrorMessage').node().style.visibility = 'visible';
             d3.select('#graphName').node().value = '';
         }
     });
