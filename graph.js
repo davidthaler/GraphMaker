@@ -79,6 +79,10 @@ class Graph{
         this.edgeMap.forEach(n => n[name] = value);
     }
 
+    withinRadius(x, y, r){
+        return this.nodes.find(n => ((n.x - x)**2 + (n.y - y)**2) <= r**2)
+    }
+
     incidentTo(node){
         return node.edges.map(eid => this.getEdgeById(eid));
     }

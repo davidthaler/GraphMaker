@@ -1,12 +1,15 @@
 /*
-First step towards GraphMaker on canvas: adding nodes/circles.
+Canvas Graph creates and renders graphs on a canvas.
+It uses the Graph class of graph.js.
 */
 window.onload = main
 
 const RADIUS = 10
-let canvas, ctx, btnState, activeNode
+let canvas, ctx, btnState, activeNodeId
 let nodes = []
 let edges = []
+// The graph
+let g
 
 let stateColor = {
     'normal'   : {'fill': 'lightgray', 'stroke': 'darkgray'},
@@ -35,30 +38,25 @@ function clearCanvas(){
 
 function drawGraph(){
     clearCanvas()
-    edges.forEach(drawEdge)
-    nodes.forEach(drawNode)
-}
-
-//Returns index in nodes of first node within distance d of point x, y
-function withinDist(x, y, d){
-    return nodes.findIndex(n => ((n.x - x)**2 + (n.y - y)**2) <= d**2)
+    g.edges.forEach(drawEdge)
+    g.nodes.forEach(drawNode)
 }
 
 function removeNode(e){
     if(btnState != 'removeNode') return
     let [x, y] = shiftXY(e.x, e.y)
-    let nIdx = withinDist(x, y, RADIUS)
-    if(nIdx != -1){
-        nodes.splice(nIdx, 1)
+    let selectedNode = g.withinRadius(x, y, RADIUS)
+    if(selectedNode){
+        g.removeNode(selectedNode.id)
         drawGraph()
-    }   
+    }
 }
 
 function addNode(e){
     if(btnState != 'addNode') return
     let [x, y] = shiftXY(e.x, e.y)
-    if(withinDist(x, y, 2 * RADIUS) == -1){
-        nodes.push({x, y})
+    if(!g.withinRadius(x, y, 2 * RADIUS)){
+        g.addNode(x, y)
         drawGraph()
     }
 }
@@ -66,14 +64,14 @@ function addNode(e){
 function addEdge(e){
     if(btnState != 'addEdge') return
     let [x, y] = shiftXY(e.x, e.y)
-    let nIdx = withinDist(x, y, RADIUS)
-    if(nIdx != -1){
-        if(activeNode == undefined){
-            activeNode = nodes[nIdx]
+    let selectedNode = g.withinRadius(x, y, RADIUS)
+    if(selectedNode){
+        if(activeNodeId == undefined){
+            activeNodeId = selectedNode.id
         }else{
             // no checks for now
-            edges.push({s:activeNode, t:nodes[nIdx]})
-            activeNode = undefined
+            g.addEdge(activeNodeId, selectedNode.id)
+            activeNodeId = undefined
             drawGraph()
         }
     }
@@ -82,9 +80,9 @@ function addEdge(e){
 function dragStart(e){
     if(btnState != 'moveNode') return
     let [x, y] = shiftXY(e.x, e.y)
-    let nIdx = withinDist(x, y, RADIUS)
-    if(nIdx != -1){
-        activeNode = nodes[nIdx]
+    let selectedNode = g.withinRadius(x, y, RADIUS)
+    if(selectedNode){
+        activeNodeId = selectedNode.id
         canvas.addEventListener('mousemove', drag)
         canvas.addEventListener('mouseup', dragEnd)
         canvas.addEventListener('mouseleave', dragEnd)
@@ -92,13 +90,12 @@ function dragStart(e){
 }
 
 function drag(e){
-    activeNode.x += e.movementX
-    activeNode.y += e.movementY
+    g.moveNode(activeNodeId, e.movementX, e.movementY)
     drawGraph()
 }
 
 function dragEnd(e){
-    activeNode = undefined
+    activeNodeId = undefined
     canvas.removeEventListener('mousemove', drag)
     canvas.removeEventListener('mouseup', dragEnd)
     canvas.removeEventListener('mouseleave', dragEnd)
@@ -109,6 +106,7 @@ function shiftXY(x, y){
 }
 
 function main(){
+    g = new Graph()
     canvas = document.querySelector('canvas')
     ctx = canvas.getContext('2d')
     ctx.strokeStyle = 'gray'
