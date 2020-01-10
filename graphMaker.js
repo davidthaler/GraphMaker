@@ -245,8 +245,7 @@ function main(){
     d3.select('svg').on('click', function(){
         if(state == 'addNode'){
             let [x, y] = d3.mouse(this);
-            let ds = g.nodes.map(n => (n.x - x)**2 + (n.y - y)**2);
-            if(!ds.some(d => d < (2*RADIUS)**2)){
+            if(!g.withinRadius(x, y, 2 * RADIUS)){
                 g.addNode(x, y);
                 drawGraph();
             }
