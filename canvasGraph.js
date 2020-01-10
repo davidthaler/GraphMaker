@@ -22,6 +22,10 @@ function drawNode(node){
     ctx.arc(node.x, node.y, RADIUS, 0, 2 * Math.PI)
     ctx.fill()
     ctx.stroke()
+    let fillColor = ctx.fillStyle
+    ctx.fillStyle = '#000000'
+    ctx.fillText(node.name, node.x, node.y)
+    ctx.fillStyle = fillColor
 }
 
 function drawEdge(edge){
@@ -111,6 +115,9 @@ function main(){
     ctx = canvas.getContext('2d')
     ctx.strokeStyle = 'gray'
     ctx.fillStyle = 'lightgray'
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'middle'
+    ctx.font = '11 px sans-serif'
     canvas.addEventListener('click', removeNode)
     canvas.addEventListener('click', addNode)
     canvas.addEventListener('click', addEdge)
