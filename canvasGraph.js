@@ -16,16 +16,26 @@ let stateColor = {
     'selected' : {'fill': 'whitesmoke', 'stroke': 'gray'}
 }
 
+function getStyle(){
+    return {fill:ctx.fillStyle, stroke:ctx.strokeStyle}
+}
+
+function setStyle(style){
+    // style is an object like {fill: #xxxxxx, stroke:#xxxxxx}
+    ctx.fillStyle = style.fill
+    ctx.strokeStyle = style.stroke
+}
+
 function drawNode(node){
+    let prevStyle = getStyle()
     ctx.beginPath()
     ctx.moveTo(node.x + RADIUS, node.y)
     ctx.arc(node.x, node.y, RADIUS, 0, 2 * Math.PI)
     ctx.fill()
     ctx.stroke()
-    let fillColor = ctx.fillStyle
     ctx.fillStyle = '#000000'
     ctx.fillText(node.name, node.x, node.y)
-    ctx.fillStyle = fillColor
+    setStyle(prevStyle)
 }
 
 function drawEdge(edge){
