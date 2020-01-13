@@ -251,4 +251,8 @@ function main(){
             }
         }
     });
+    d3.select('a').on('click', function(){
+        this.href = 'data:image/svg+xml,' 
+                + document.querySelector('svg').outerHTML;
+    })
 }
