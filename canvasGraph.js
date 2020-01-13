@@ -136,4 +136,8 @@ function main(){
         b.addEventListener('change', function(){
                 btnState=this.value
             }))
+    document.querySelector('#downloadGraphImage')
+            .addEventListener('click', function(ev){
+                    this.href = canvas.toDataURL()
+            })
 }
