@@ -6,6 +6,6 @@ There are two different front-ends on this project, one based on D3 and SVG,
 the other based on HTML5 canvas. They share the data class, Graph, in graph.js, and algorithms.
 
 * [Graph Maker](https://davidthaler.github.io/GraphMaker/graphMaker.html) - This variant uses D3 and SVG in the display.
-* [Canvas Graph](https://davidthaler.github.io/GraphMaker/graphMaker.html) - This variant is based on HTML Canvas.
+* [Canvas Graph](https://davidthaler.github.io/GraphMaker/canvasGraph.html) - This variant is based on HTML Canvas.
 
 This content is served from [here](https://davidthaler.github.io/GraphMaker/) on Github Pages.
