@@ -15,22 +15,28 @@
     </head>
     <body>
         <div id='topChrome'>
-            <button id="addNode">Add Node</button>
-            <button id="removeNode">Remove Node</button>
-            <button id="addEdge">Add Edge</button>
-            <button id="removeEdge">Remove Edge</button>
-            <button id="runBFS">Run BFS</button>
-            <label id="loadLabel">Load: </label>
-            <select id="loadSavedGraph">
-                <option value="noSelection">None</option>
-            </select>
-            <button id="saveGraph">Save</button>
-            <a href='' id='downloadSVG' download='graph.svg'>
-                <button>Download SVG</button>
-            </a>
-            <a href='' id='downloadJSON' download='graph.json'>
-                <button>Download JSON</button>
-            </a>
+            <div>
+                <button id="addNode">Add Node</button>
+                <button id="removeNode">Remove Node</button>
+                <button id="addEdge">Add Edge</button>
+                <button id="removeEdge">Remove Edge</button>
+                <button id="runBFS">Run BFS</button>
+                <button id="runDFS">Run DFS</button>
+            </div>
+            <div>
+                <button id="clearGraph">Clear</button>
+                <label id="loadLabel">Load: </label>
+                <select id="loadSavedGraph">
+                    <option value="noSelection">None</option>
+                </select>
+                <button id="saveGraph">Save</button>
+                <a href='' id='downloadSVG' download='graph.svg'>
+                    <button>Download SVG</button>
+                </a>
+                <a href='' id='downloadJSON' download='graph.json'>
+                    <button>Download JSON</button>
+                </a>
+            </div>
         </div>
         <div id="main" class="main">
             <svg version="1.1" baseProfile="full" width="600" height="600" 

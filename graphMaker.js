@@ -39,6 +39,8 @@ function clickNode(){
         }
     }else if(state=='runBFS'){
         BFS(g, nodeId);
+    }else if(state=='runDFS'){
+        DFS(g, nodeId);
     }
 }
 
@@ -240,6 +242,8 @@ function main(){
     d3.select('#addEdge').on('click', buttonClick(['pickS', 'pickT']));
     d3.select('#removeEdge').on('click', buttonClick('removeEdge'));
     d3.select('#runBFS').on('click', buttonClick('runBFS'));
+    d3.select('#runDFS').on('click', buttonClick('runDFS'));
+    d3.select('#clearGraph').on('click', clearGraph);
     makeLoadSelector();
     makeSaveDialog();
     d3.select('svg').on('click', function(){
