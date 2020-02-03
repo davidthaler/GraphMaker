@@ -255,11 +255,11 @@ function main(){
             }
         }
     });
-    d3.select('#downloadSVG').on('click', function(){
+    d3.select('#exportSVG').on('click', function(){
         this.href = 'data:image/svg+xml,' 
                 + document.querySelector('svg').outerHTML;
     })
-    d3.select('#downloadJSON').on('click', function(){
+    d3.select('#exportJSON').on('click', function(){
         this.href = 'data:application/json,' + g.toJSON();
     });
 }
