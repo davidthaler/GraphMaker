@@ -216,6 +216,21 @@ function makeSaveDialog(){
             });
 }
 
+// Downloads a graph from the examples/ directory at the site root
+function downloadGraph(graph_name){
+    let path = `./examples/${graph_name}.json`
+    fetch(path)
+        .then(response => {
+            if(!response.ok){
+                throw new Error('Could not fetch: ' + path);
+            }
+            return response.json();
+        }).then(json => {
+            g = Graph.fromJSON(JSON.stringify(json));
+            drawGraph();
+        }).catch(err => console.error(err.message))
+}
+
 function clearGraph(){
     g = new Graph();
     drawGraph();
