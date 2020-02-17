@@ -57,3 +57,5 @@ svg{
         color:red;
         visibility: hidden;
     }
+
+    a{text-decoration: none;}
