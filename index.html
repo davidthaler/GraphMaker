@@ -6,44 +6,70 @@
         <style>
             h1, h2{text-align: center;}
             #main{margin: 2em 10em 0 10em;}
-            body{font-family: Arial, Helvetica, sans-serif;}
+            body{
+                font-family: Avenir, Helvetica, sans-serif;
+                font-size: 1.25rem;
+                line-height: 1.5;
+            }
             li{margin: 0 0 0.5em 0;}
             a{text-decoration: none;}
             li > a{font-size: larger;}
+            code{
+                background-color: whitesmoke;
+                padding: 0 5px;
+                border-radius: 5px;
+            }
         </style>
     </head>
 <body>
     <div id='main'>
         <h2>Graph Maker</h2>
         <p>
-            This project is a webapp that allows for creation and modification of graphs, 
-            that is, a set of nodes linked by some edges. It can execute common algorithms 
-            on graphs and animate their progress on the displayed graph. It also allows for 
-            storage of graphs, and downloading images of graphs.
+            In discrete math and computer science, a graph is a set of nodes 
+            plus a set of edges defined as pairs of connected nodes. 
+            Graph Maker is a webapp that allows for creation and modification of graphs.
+            It can execute common algorithms  on graphs and animate their 
+            progress on the displayed graph. It also allows for storage of graphs, 
+            and downloading images of graphs.
         </p>
-        <p>
-            There are two different front-ends on this project, one based on D3 and SVG,
-            the other based on HTML5 canvas. They share the data class, Graph, in graph.js, 
-            and algorithms.
-        </p>
+        <p>Go to the <a href="graphMaker.html">Graph Maker</a> app.</p>
+        <h3>Features/Instructions</h3>
         <ul>
             <li>
-                <a href="graphMaker.html">Graph Maker (D3)</a>
-                <p>
-                    This is a D3-based version of the Graph Maker project.
-                    It is more developed, and includes animations of a few graph algorithms.
-                </p>
+                To add a node, click <code>Add Node</code> 
+                then click on the canvas where the node should go.
             </li>
             <li>
-                <a href='canvasGraph.html'>Canvas Graph</a>
-                <p>
-                    Similar to the D3 project above, but implemented with HTML5 canvas. 
-                    This project is not as far along.
-                </p>
+                To add an edge, click <code>Add Edge</code> 
+                then click the two nodes connected by the new edge.
+            </li>
+            <li>
+                To reposition nodes, just drag the node. 
+                All of its edges come along with it
+            </li>
+            <li>
+                To run traversal algorithms, select the algorithm, 
+                then click on the starting node.
+            </li>
+            <li>
+                To save your graph for later use, click <code>Save</code> 
+                and then choose a name for your graph.
+            </li>
+            <li>
+                To load a previously saved graph, select the graph name from 
+                under the <code>Load</code> selector.
+            </li>
+            <li>
+                Choose <code>Export SVG</code> to export the image of the graph.
+            </li>
+            <li>
+                Choose <code>Export JSON</code> to export the graph data structure.
             </li>
         </ul>
-        <p>These are served from Github Pages. The repository is at:
-            <a href="https://github.com/davidthaler/graphMaker">github.com/davidthaler/graphMaker</a>
+        <p>The repository for Graph Maker is at:
+            <a href="https://github.com/davidthaler/graphMaker">
+                github.com/davidthaler/graphMaker
+            </a>
         </p>
     </div>
 </body>
